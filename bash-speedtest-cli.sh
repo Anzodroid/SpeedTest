@@ -23,7 +23,7 @@ do
 currentTime=$(date "+%H:%M:%S on %Y-%m-%d")
 waitTime='600'
 resultsFile='speedtestresults.txt'
-BASEDIR=$(dirname "$0")
+BASEDIR=$(dirname $(realpath $0))
 
 cd $BASEDIR
 
@@ -43,9 +43,9 @@ then
     echo 'Printing to file..'
     if [ $csv ] 
     then
-        echo $results >> $resultsFile
+        echo $results >> $BASEDIR/$resultsFile
     else
-        echo $results | python -m json.tool >> $resultsFile
+        echo $results | python -m json.tool >> $BASEDIR/$resultsFile
     fi
     echo 'File printed'
 fi
@@ -55,9 +55,9 @@ then
     echo 'Printing to file..'
     if [ $csv ] 
     then
-        echo $results >> $resultsFile
+        echo $results >> $BASSEDIR/$resultsFile
     else
-        echo $results | python -m json.tool >> $resultsFile
+        echo $results | python -m json.tool >> $BASEDIR/$resultsFile
     fi
     echo 'File printed'
     echo 'Pushing file to Github repo..'
