@@ -11,7 +11,7 @@ Bash script to run regular speed tests using the SpeedTest CLI tool and store th
 - If you want to push to GitHub then you'll need to set up a repo after you clone.
 - Empty out the speedtestresults.txt file and confirm that this is in the same directory as your bash file.
 - By default the script will simply print the results to the terminal. To save your results you need to use an optional parameter flag when starting the script.
-- There are 3 optional flags to be passed => `-s, -g, -c`. See below for what they do.
+- Optional flags to be passed => `-s, -g, -c, -o, -h`. See below for what they do.
 - Run `bash-speedtest-cli.sh` in your terminal, using any flags as required.
 
 ## Config
@@ -20,6 +20,8 @@ Bash script to run regular speed tests using the SpeedTest CLI tool and store th
 -s => Save the results to your local file.
 -g => Save the results to your local file and also push to your GitHub repo.
 -c => Receive the results in a CSV format instead of JSON
+-o => Run the test only once
+-h => Get script usage 
 ```
 - Using multiple flags is fine, but avoid using both `-s` & `-g` as this will duplicate your results.
 - There are some script variables used to control the time format, wait time between tests and the results filename. Find them here:

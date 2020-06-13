@@ -2,7 +2,7 @@
 
 while true
 do
-    while getopts sgc opt;
+    while getopts sgcoh opt;
     do
 
     case $opt in
@@ -12,6 +12,11 @@ do
             github=true;;
         c)
             csv=true;;
+        o)
+            once=true;;
+        h)
+            echo "usage [-s save] [-g github] [-c csv] [-o run once]"
+			exit 0;;
         \?)
             echo "Sorry, didn't understand that option flag.. :| -$OPTARG" >&2;;
     esac
@@ -65,6 +70,11 @@ then
         git commit $resultsFile -m "Speedtest results updated - $currentTime "
         git push origin master
     echo 'File pushed'
+fi
+
+if [ $once ] 
+then
+	break
 fi
 
 echo 'Waiting ' $(( $waitTime / 60 )) ' mins..'
