@@ -28,7 +28,7 @@ do
 currentTime=$(date "+%H:%M:%S on %Y-%m-%d")
 waitTime='600'
 resultsFile='speedtestresults.txt'
-BASEDIR=$(dirname $(realpath $0))
+BASEDIR=$(dirname $(readlink -f $0))
 resultsFileFull=$BASEDIR/$resultsFile
 
 cd $BASEDIR
