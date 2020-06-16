@@ -27,4 +27,3 @@ Optional parameter flags control how you want the script to run.
 Using multiple flags is fine, but avoid:
 - Using both `-s` & `-g` will only save and not push to github. If you want to save and push then use -g
 - Using both `-o` & `-w` the wait time will be ignored if the script runs only once.
-```
