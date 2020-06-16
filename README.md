@@ -14,7 +14,7 @@ Bash script to run regular speed tests using the SpeedTest CLI tool and store th
 - Run `bash-speedtest-cli.sh` in your terminal, using any of the following flags as required.
 
 ## Config
-- Optional parameter flags control how you want the script to run. 
+Optional parameter flags control how you want the script to run. 
 ```
 -h => Get script help and usage 
 -s => Save the results to your local file.
@@ -24,7 +24,7 @@ Bash script to run regular speed tests using the SpeedTest CLI tool and store th
 -w [option] => Set the wait time between runs in seconds (Default is 60 seconds)
 -r [option] => Change the results file you're saving to (Default is speedtestresults.txt)
 ```
-- Using multiple flags is fine, but avoid:
--- Using both `-s` & `-g` will only save and not push to github. If you want to save and push then use -g
--- Using both `-o` & `-w` the wait time will be ignored if the script runs only once.
+Using multiple flags is fine, but avoid:
+- Using both `-s` & `-g` will only save and not push to github. If you want to save and push then use -g
+- Using both `-o` & `-w` the wait time will be ignored if the script runs only once.
 ```
