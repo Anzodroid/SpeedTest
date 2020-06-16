@@ -9,25 +9,22 @@ Bash script to run regular speed tests using the SpeedTest CLI tool and store th
 ## Instructions
 - Install the speedtest cli with PIP by using `pip install speedtest-cli`
 - If you want to push to GitHub then you'll need to set up a repo after you clone.
-- Empty out the speedtestresults.txt file and confirm that this is in the same directory as your bash file.
-- By default the script will simply print the results to the terminal. To save your results you need to use an optional parameter flag when starting the script.
-- Optional flags to be passed => `-s, -g, -c, -o, -h`. See below for what they do.
-- Run `bash-speedtest-cli.sh` in your terminal, using any flags as required.
+- Empty out the speedtestresults.txt file.
+- By default the script will simply print the results in JSON to the terminal. To save your results you need to use an optional parameter flag when starting the script - either -s to save to disk, or -g to save to disk and GitHub.
+- Run `bash-speedtest-cli.sh` in your terminal, using any of the following flags as required.
 
 ## Config
-- The three optional parameter flags control how you want the script to run. 
+- Optional parameter flags control how you want the script to run. 
 ```
+-h => Get script help and usage 
 -s => Save the results to your local file.
 -g => Save the results to your local file and also push to your GitHub repo.
--c => Receive the results in a CSV format instead of JSON
+-c => Receive the results in CSV format instead of JSON
 -o => Run the test only once
--h => Get script usage 
+-w [option] => Set the wait time between runs in seconds (Default is 60 seconds)
+-r [option] => Change the results file you're saving to (Default is speedtestresults.txt)
 ```
-- Using multiple flags is fine, but avoid using both `-s` & `-g` as this will duplicate your results.
-- There are some script variables used to control the time format, wait time between tests and the results filename. Find them here:
+- Using multiple flags is fine, but avoid:
+-- Using both `-s` & `-g` will only save and not push to github. If you want to save and push then use -g
+-- Using both `-o` & `-w` the wait time will be ignored if the script runs only once.
 ```
-currentTime
-waitTime
-resultsFile
-```
-- The wait time is in seconds.

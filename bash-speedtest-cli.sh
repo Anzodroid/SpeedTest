@@ -1,39 +1,62 @@
 #!/bin/bash
 
+# Set up variables
+waitTime='60'
+resultsFile='speedtestresults.txt'
+currentTime=$(date "+%Y-%m-%d %H:%M:%S")
+BASEDIR=$(dirname $(readlink -f $0))
+helpMessage='usage [-s save to file] [-g save to github] [-c record in csv] [-o run once] [-w wait time in seconds] [-r results file]'
+
+
+# Get script arguments
+while getopts sgcohw:r: opt;
+do
+
+case $opt in
+    s)
+        save=true;;
+    g)
+        github=true;;
+    c)
+        csv=true;;
+    o)
+        once=true;;
+	w)
+		waitTime="$OPTARG";;
+	r)
+		resultsFile="$OPTARG";;
+    h)
+        echo $helpMessage 
+		exit 0;;
+    \?)
+		echo $helpMessage
+        echo "Exiting due to illegal option" >&2
+		exit 1;;
+esac
+sleep 1
+done
+
+
+# Loop run test and wait $waitTime between tests
 while true
 do
-    while getopts sgcoh opt;
-    do
 
-    case $opt in
-        s)
-            save=true;;
-        g)
-            github=true;;
-        c)
-            csv=true;;
-        o)
-            once=true;;
-        h)
-            echo "usage [-s save] [-g github] [-c csv] [-o run once]"
-			exit 0;;
-        \?)
-            echo "Sorry, didn't understand that option flag.. :| -$OPTARG" >&2;;
-    esac
+save() {
+	echo "Saving to file $resultsFileFull"
+	if [ $csv ]
+		then
+		echo $results >> $resultsFileFull
+	else
+		echo $results | python -m json.tool >> $resultsFileFull
+	fi
+	echo "File saved"
+}
 
-    sleep 1
-
-    done
-
-currentTime=$(date "+%H:%M:%S on %Y-%m-%d")
-waitTime='600'
-resultsFile='speedtestresults.txt'
-BASEDIR=$(dirname $(readlink -f $0))
 resultsFileFull=$BASEDIR/$resultsFile
-
 cd $BASEDIR
+echo "Starting SpeedTest check at $currentTime"
 
-echo 'Starting a SpeedTest check at' $currentTime
+
 if [ $csv ] 
 then
     results=$(speedtest-cli --csv)
@@ -42,44 +65,30 @@ else
     results=$(speedtest-cli --json)
     echo $results | python -m json.tool
 fi
-echo 'Finished with the test'
+echo 'SpeedTest complete'
+
 
 if [ $save ] 
 then
-    echo 'Printing to file..'
-    if [ $csv ] 
-    then
-        echo $results >> $resultsFileFull
-    else
-        echo $results | python -m json.tool >> $resultsFileFull
-    fi
-    echo 'File printed'
-fi
-
-if [ $github ] 
+	save
+elif [ $github ] 
 then
-    echo 'Printing to file..'
-    if [ $csv ] 
-    then
-        echo $results >> $resultsFileFull
-    else
-        echo $results | python -m json.tool >> $resultsFileFull
-    fi
-    echo 'File printed'
-    echo 'Pushing file to Github repo..'
-        git add $resultsFile
-        git commit $resultsFile -m "Speedtest results updated - $currentTime "
-        git push origin master
-    echo 'File pushed'
+	save
+    echo "Attempting git add, commit, & push to GitHub of $resultsFile"
+        echo `git add $resultsFile`
+        echo `git commit $resultsFile -m "Speedtest results updated at $currentTime"`
+        echo `git push origin master`
+    echo "File pushed $resultsFileFull"
 fi
 
 if [ $once ] 
 then
+	echo "Job done!"
 	break
 fi
 
-echo 'Waiting ' $(( $waitTime / 60 )) ' mins..'
+echo "Waiting $waitTime seconds until next test..."
 
-sleep $waitTime
+sleep $(($waitTime * 10))
 
 done
