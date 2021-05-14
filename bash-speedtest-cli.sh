@@ -3,6 +3,7 @@
 # Set up variables
 waitTime='60'
 resultsFile='speedtestresults.txt'
+resultsSummaryFile='speedtestsummary.txt'
 currentTime=$(date "+%Y-%m-%d %H:%M:%S")
 BASEDIR=$(dirname $(readlink -f $0))
 helpMessage='usage [-s save to file] [-g save to github] [-c record in csv] [-o run once] [-w wait time in seconds] [-r results file]'
@@ -46,6 +47,11 @@ save() {
 	if [ $csv ]
 		then
 		echo $results >> $resultsFileFull
+		echo "Removing Whitelines"
+		# Adding pipe for clobber
+		`awk 'NF' $resultsFileFull >| temp.txt && mv temp.txt $resultsFileFull`
+		echo "creating summary file"
+		`tail -n 5000 $resultsFileFull >| $resultsSummaryFileFull`
 	else
 		echo $results | python -m json.tool >> $resultsFileFull
 	fi
@@ -53,6 +59,7 @@ save() {
 }
 
 resultsFileFull=$BASEDIR/$resultsFile
+resultsSummaryFileFull=$BASEDIR/$resultsSummaryFile
 cd $BASEDIR
 echo "Starting SpeedTest check at $currentTime"
 
@@ -75,8 +82,8 @@ elif [ $github ]
 then
 	save
     echo "Attempting git add, commit, & push to GitHub of $resultsFile"
-        echo `git add $resultsFile`
-        echo `git commit $resultsFile -m "Speedtest results updated at $currentTime"`
+        echo `git add $resultsFile $resultsSummaryFile`
+        echo `git commit $resultsFile $resultsSummaryFile -m "Speedtest results updated at $currentTime"`
         echo `git push origin master`
     echo "File pushed $resultsFileFull"
 fi
